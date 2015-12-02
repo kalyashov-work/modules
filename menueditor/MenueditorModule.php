@@ -25,10 +25,7 @@ class MenuEditorModule extends WebModule
 
 	public function init()
 	{
-		/*$this->setImport(array(
-			'configuration.models.*',
-			'configuration.components.*',
-		));*/
+
 	}
 
 	public function beforeControllerAction($controller, $action)
@@ -42,18 +39,6 @@ class MenuEditorModule extends WebModule
             return false;
         }
 	}
-
-
-    public static function adminMenu()
-    {
-        return array(
-        );
-    }
-
-    public function getOperations()
-    {
-        return ArrayHelper::markObjects(NewsSection::model()->findAll(), 'name');
-    }
 
 
 }
