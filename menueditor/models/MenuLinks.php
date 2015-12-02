@@ -5,7 +5,7 @@ class MenuLinks extends EMongoDocument
     public $id;
     public $title;
     public $controller;
-    public $is_visible;
+    public $is_visible = 1;
     public $url;
     public $icon;
     public $parent_id;

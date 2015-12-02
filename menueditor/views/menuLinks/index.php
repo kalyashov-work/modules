@@ -23,6 +23,17 @@
     </div>
 </div>
 
+<div class="span12">
+        <?php 
+        foreach ($invisibleSections as $section) 
+        {   
+            echo CHtml::link($section['title'], array('/menueditor/menulinks/update/id/' . $section['id']), array('class' => '', 'style' => 'color: #2980b9;'));
+            echo "</br>";
+        }
+?>
+
+</div>
+
 <script>
 $(document).ready(function() 
 {
