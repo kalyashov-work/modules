@@ -1,6 +1,3 @@
-<?php 
-   
-?>
 
 <div class="row-fluid">
     <div class="span12">
@@ -8,19 +5,15 @@
             <div class="portlet-title">
                 <div class="caption"><i class="icon-cogs"></i>SEDMAX | Редактор меню</div>
                 <div class="actions">
-                    <a id="change_search" href="#" class="btn red toggle"><i id="search_icon" class="fa fa-sort"></i>По номерам</a>
                     <a href="<?php
-                       #$url_add = Yii::app()->controller->module->id.'/'.Yii::app()->controller->id.'/create';
-                        $url_add = "/menueditor/menulinks/create";
+                        $url_add = Yii::app()->controller->module->id.'/'.Yii::app()->controller->id.'/create';
                         echo Yii::app()->createUrl($url_add); ?>" class="btn red"><i class="fa fa-plus"></i> Добавить пункт</a>
-                    <!--<a id="save_structure" href="#" class="btn red toggle"><i class="fa fa-save"></i> Сохранить структуру</a>-->
                 </div>
             </div>
 
             <div class="portlet-body">
                 <input type="search" size="40" id="search" class="form-control" style="margin-bottom:20px;">
-                
-                <div id="objects_tree" class="tree-demo">
+                <div id="menu_links_tree" class="tree-demo">
                 </div>
                 <div class="alert alert-info no-margin margin-top-10">
                     Редактирование пунктов меню осуществляется через контекстное меню (правый клик мышью)
@@ -33,15 +26,13 @@
 <script>
 $(document).ready(function() 
 {
-    var tree;
-
    /**
     *  Ф-я для получения структуры деревва
     */
     function getTreeStructure()
     {
 
-        var json = $.jstree.reference('#objects_tree').get_json(null, {"flat": true, "no_state": true,}); 
+        var json = $.jstree.reference('#menu_links_tree').get_json(null, {"flat": true, "no_state": true,}); 
         var jsonStr = JSON.stringify(json);
         var jsonData = JSON.parse(jsonStr);
 
@@ -108,22 +99,13 @@ $(document).ready(function()
         }
     }
 
-   /** 
-    * Ф-я для проверки массива на уникальность
-    *
-    
-    function isUnigueArray(a) 
-    {     
-        return a.sort().filter(function(item, pos, ary) 
-        {
-            return !pos || item != ary[pos - 1];     
-        }) 
-    }*/
 
 
    /** 
-    * Ф-я для проверки массива на уникальность
-    *
+    * Ф-я для проверки массива на уникальность элементов 
+    * 
+    * return {array} исходный массив, в случае уникальности его элементов,
+    * иначе новую последовательность от 1 до array.length
     */ 
     function isUniqueArray(array)
     {   
@@ -141,65 +123,48 @@ $(document).ready(function()
     }
 
 
-
-
-    function arraysEqual(a1,a2) 
-    {
-        return JSON.stringify(a1)==JSON.stringify(a2);
-    }
-
+   /**
+    * Ф-я возвращает массив пунктов меню, которым нужно изменить 
+    * порядок (order)
+    */
     function orderChanges(nodes,index,parentId)
     {
-        if(isNaN(parentId))             ///!!!!!!!!!!!!
+        var nodesToChange = [];
+
+        // если родитель, то нужно вернуть все корневые пункты
+        if(isNaN(parentId))       
         {
-            var newOrder=[];
+            
             for(var i = 0; i < nodes.length; i++)
             {
-                newOrder[i] = {
+                nodesToChange[i] = {
                     id: nodes[i].id,
                     text: nodes[i].text,
                     order: nodes[i].order,
                 }
             }
-            return newOrder;
+            return nodesToChange;
 
         }
+        // иначе нужно вернуть все дочерние пункты корневого пункта
+        // nodes[index]
         else
         {
-            var newOrder = [];
             for(var i = 0; i < nodes[index].childs.length; i++)
             {
-                newOrder[i] = {
+                nodesToChange[i] = {
                     id: nodes[index].childs[i].id,
                     text: nodes[index].childs[i].text,
                     order: nodes[index].childs[i].order,
                 }
             }
-            return newOrder;
+            return nodesToChange;
         }
     }
 
-    
-
     var search = 0;
-    $('#change_search').click(function() 
-    {
-        if(search)
-        {
-            search = 0;
-            $(this).text("По номерам");
 
-        }
-        else
-        {
-            search = 1;
-            $(this).text("По алфавиту");
-        }
-
-        $('#objects_tree').jstree('refresh');
-    });
-
-    $("#objects_tree")
+    $("#menu_links_tree")
         .on('changed.jstree', function (e, data) 
         {
             tree = getTreeStructure();
@@ -236,7 +201,6 @@ $(document).ready(function()
                 toastr.error('Пункт меню не переименован');
             }
             
-            
         })
         .on('move_node.jstree', function (e, data) 
         {
@@ -259,12 +223,9 @@ $(document).ready(function()
                 
                 
                 var nodes = getTreeStructure();
-            
                 var index = getIndexNodeInTree(nodes, data.node.parent);
-
                 var nodesToChange = orderChanges(nodes, index, data.node.parent);
      
-                
                 console.debug(nodesToChange);
 
                 var newOrder = []; 
@@ -367,13 +328,13 @@ $(document).ready(function()
                         {
                             return false;
                         }
-
                     }
 
                     return true;
                 },
                 'data' : {
-                    'url' : function (node) {
+                    'url' : function (node) 
+                    {
                         return '/menueditor/generatetree/generate/';
                     },
                     'data' : function (node) {
@@ -383,11 +344,14 @@ $(document).ready(function()
             },
             "dnd" : 
             {
-                    "drop_finish" : function () {
+                    "drop_finish" : function () 
+                    {
                         alert("DROP");
                     },
-                    "drag_check" : function (data) {
-                        if(data.r.attr("id") == "phtml_1") {
+                    "drag_check" : function (data) 
+                    {
+                        if(data.r.attr("id") == "phtml_1") 
+                        {
                             return false;
                         }
                         return {
@@ -395,8 +359,6 @@ $(document).ready(function()
                             before : false,
                             inside : true
                         };
-
-                        
                     },
                     "drag_finish" : function () {
                         
@@ -407,11 +369,12 @@ $(document).ready(function()
             "contextmenu":{
                     "items": function () {
                         return {
-                            "Create": {
-                                "label": "Создать",
+                            "Create": 
+                            {
+                                "label": "",
                                 "action": function (data) 
                                 {
-                                    var json = $.jstree.reference('#objects_tree').get_json(null, { "flat": true, "no_state": true,}); 
+                                    var json = $.jstree.reference('#menu_links_tree').get_json(null, { "flat": true, "no_state": true,}); 
                                     alert(JSON.stringify(json));
                                 
                                 }
@@ -438,12 +401,12 @@ $(document).ready(function()
                             },
                             "Delete": {
                                 "label": "Удалить",
-                                "action": function (data) {
+                                "action": function (data) 
+                                {
                                     var ref = $.jstree.reference(data.reference),
                                         sel = ref.get_selected();
                                     if(!sel.length) { return false; }
                                     ref.delete_node(sel);
-
                                 }
                             }
                         };
@@ -468,11 +431,11 @@ $(document).ready(function()
             "plugins" : [ "contextmenu", "dnd", "state", "types", "search","sort"],
             "sort": function (a, b) 
             {
-                if(search)
-                    return this.get_text(a) > this.get_text(b) ? 1 : -1;
+                return a.id > b.id ? 1 : -1;
             },
         });
 
+        // поиск
         var to = false;
         $('#search').keyup(function () 
         {
@@ -483,7 +446,7 @@ $(document).ready(function()
             to = setTimeout(function () 
             {
                 var v = $('#search').val();
-                $('#objects_tree').jstree(true).search(v);
+                $('#menu_links_tree').jstree(true).search(v);
             }, 250);
         });
 

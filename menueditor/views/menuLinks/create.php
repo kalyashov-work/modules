@@ -65,10 +65,11 @@
                                     <?php   echo  CHtml::activeTextField($model,'icon', array('class' => 'form-control')) . '<br>'; ?>
                             </div>
 
-                            <label class="control-label col-md-3"> <?php echo CHtml::activeLabel($model, 'order'); ?> </label>
+                            <!-- Порядок нельзя указывать при создании -->
+                            <!--<label class="control-label col-md-3"> <?php # echo CHtml::activeLabel($model, 'order'); ?> </label>
                             <div class="col-md-9">
-                                <?php   echo CHtml::activeTextField($model,'order', array('class'=>'form-control touchspin_retries')) . '<br>'; ?>
-                            </div>
+                                <?php #   echo CHtml::activeTextField($model,'order', array('class'=>'form-control touchspin_retries')) . '<br>'; ?>
+                            </div>-->
 
                             <label class="control-label col-md-3"> <?php echo CHtml::activeLabel($model, 'is_visible'); ?> </label>
                             <div class="col-md-9">
@@ -87,7 +88,7 @@
                         <div class="col-md-6">
                             <div class="col-md-offset-3 col-md-9">
                                 <?php echo CHtml::submitButton('Обновить', array('class' => 'btn blue', 'value' => 'сохранить')); ?>
-                                <?php echo CHtml::button('Отменить', array('class' => 'btn default','onclick' => 'js:document.location.href="/configuration/menulinks'.'"')); ?>
+                                <?php echo CHtml::button('Отменить', array('class' => 'btn default','onclick' => 'js:document.location.href="/menueditor/menulinks/'.'"')); ?>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -96,7 +97,6 @@
                 </div>
 
                 <!-- Подпункты (только для главных пунктов) -->
-
                 <?php if($subsections) { ?>
                   <h3 class="form-section">Подпункты</h3>
                     <div class="row">

@@ -8,41 +8,9 @@ class GenerateTreeController extends BaseController
     public static function actionsTitles()
     {
         return array(
-            'Index'  => 'Список всех пунктов меню',
-            'ChangeOrder' => 'Изменение сортировки',
             'Generate' => 'Генерация json',
-            'GenerateTest' => 'Генерация тест',
-            
-            
-        
         );
     }
-
-    /*TEST*/
-         public function getSubNodes()
-        {
-
-            return TestTree::model()->findAll(
-                array(
-                    'conditions'=>array(
-                        'parent_id'=>array('greater'=> 0)
-                    ),
-                    'sort'=>array('order' => 1)
-                ));
-        }
-
-        public function getMainNodes()
-        {
-            return TestTree::model()->findAll(
-            array(
-                'conditions'=>array(
-                    'parent_id'=>array('equals'=>0)
-                ),
-                'sort'=>array('order' => 1)
-            ));
-        }
-    /*TEST*/
-
 
     public function getSubSections($id = NULL)
     {
@@ -97,49 +65,6 @@ class GenerateTreeController extends BaseController
     }
 
 
-	public function actionIndex()
-	{
-
-        if(Yii::app()->request->isAjaxRequest)
-        {
-            $this->layout = '//layouts/empty';
-            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
-        }
-        else
-        {
-            $this->layout = '//layouts/main';
-        }
-
-        Yii::app()->clientScript->registerScriptFile(Yii::app()->request->getBaseUrl(false).'/js/plugins/jstree/dist/jstree.min.js', CClientScript::POS_HEAD);
-        Yii::app()->clientScript->registerScriptFile(Yii::app()->request->getBaseUrl(false).'/js/plugins/bootbox/bootbox.min.js', CClientScript::POS_END);
-
-        $this->render('index');
-        
-	}
-
-    public function actionChangeOrder($id = null)
-    {
-        if(($id == null)) 
-            $this->redirect(array('index'));
-
-
-        if(isset($_POST['data']))
-        {
-            
-            $nodes = json_decode($_POST['data']);
-
-            /*foreach ($nodes as $node) {
-                echo $node->id;
-            }*/
-
-            $model = $this->loadModel($id);
-            $model->title += 'h';
-
-            if ($model->save()) 
-                echo 'saved';
-        }
-
-    }
 
     public function actionGenerate()
     {
@@ -178,44 +103,6 @@ class GenerateTreeController extends BaseController
         echo json_encode(array_merge($sectionData,$subsectionData));
     }
    
-
-    public function actionGenerateTest()
-    {
-        $nodesData = array();
-        $subnodesData = array();
-
-        $nodes = $this->getMainNodes();
-        $subnodes = $this->getSubNodes();
-
-        foreach ($nodes as $node) 
-        {
-            $nodesData[] = array(
-                    'id' => $node->id,
-                    'text' => $node->title,
-                    'parent' => '#',
-                    'class' =>'jstree-drop',
-                    'data' => array('order' => $node->order),
-                );
-        }
-
-        foreach ($subnodes as $node) 
-        {
-            $subnodesData[] = array(
-                'id' => $node->id,
-                'text' => $node->title,
-                'parent' => $node->parent_id,
-                'class' => 'jstree-drop',
-                'data' => array('order' => $node->order),
-            );
-        }
-
-
-        header('Content-type: text/json');
-        header('Content-type: application/json');
-    
-        echo json_encode(array_merge($nodesData,$subnodesData));
-    }
-
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

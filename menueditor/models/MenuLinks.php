@@ -9,7 +9,7 @@ class MenuLinks extends EMongoDocument
     public $url;
     public $icon;
     public $parent_id;
-    public $order;
+    public $order = 1;
     public $menu_id = 7;
     public $page_id;
     public $not_user_role;
@@ -42,7 +42,7 @@ class MenuLinks extends EMongoDocument
     {
         return array(
             array(
-                'title,order',
+                'title',
                 'required'
             ),
             array(
@@ -105,8 +105,10 @@ class MenuLinks extends EMongoDocument
         return true;
     }
 */
-    // метод для приведения типов для mongoDB
-    // перед сохранением
+
+   /**
+    * Метод для приведения типов перед сохранением в MongoDB
+    */  
     protected function beforeSave()
     {
         if(parent::beforeSave())
@@ -137,13 +139,14 @@ class MenuLinks extends EMongoDocument
     }
 
    
-    // метод возвращает массив типов переменных
-    protected function returnArrayType(){
+   /**
+    * Метод возвращает массив типов переменных
+    */
+    protected function returnArrayType()
+    {
         $type = 'string';
-
         $namesEl = array();
         
-
         // проверяем какой тип должен быть
         // если есть numerical и integerOnly значит тип int
         // если есть numerical и нет integerOnly, значит тип float
@@ -156,39 +159,33 @@ class MenuLinks extends EMongoDocument
             foreach ($names_array as $nameOne)
             {
                 $nameOne = trim($nameOne);
-                
 
                 if (in_array('numerical', $rule) )
                 {
-                    
                     $namesEl[$nameOne] = 'float';
-            
 
                     if (in_array('integerOnly', $rule))
                     {
-                        
                         $namesEl[$nameOne] = 'integer';
-                      
                     }
                 }
                 else if(in_array('boolean', $rule))
                 {
                     $namesEl[$nameOne] = 'boolean';
                 }
-                else if(($namesEl[$nameOne] != 'integer') && (($namesEl[$nameOne] != 'float') ) && (($namesEl[$nameOne] != 'boolean') ))
+                else if(($namesEl[$nameOne] != 'integer') && (($namesEl[$nameOne] != 'float') ) && (($namesEl[$nameOne] != 'boolean')))
                 {
                     $namesEl[$nameOne] = 'string';
                 }
-                
             }
         }
-
         return $namesEl;
     }
 
-    // метод для генерации нового id устройства
-    // считывается последний id и и выдается id+1
-    // если он уникальный
+
+   /**
+    * Метод возвращает новый id для пункта меню
+    */
     public static function getNewId(){
         $idAll = array();
         // получаем значения всех Id
@@ -196,7 +193,6 @@ class MenuLinks extends EMongoDocument
         
         foreach ($all as $one)
         {
-        
             $idAll[]=$one["id"];
         }
        
@@ -218,5 +214,4 @@ class MenuLinks extends EMongoDocument
     {
     
     }
-
 }

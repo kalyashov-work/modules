@@ -171,7 +171,8 @@ class MenuLinksController extends BaseController
         $parents[0] = 'Нет родителя';
         foreach ($sections as $section) 
         {
-            $parents[$section['id']] = $section['title'];
+            if($section['id'] != $id)
+                $parents[$section['id']] = $section['title'];
         }
 
         $childs = MenuLink::model()->findAll(
@@ -278,7 +279,6 @@ class MenuLinksController extends BaseController
 
         if($model->save())
             echo "saved";
-
     }
 
 
@@ -287,7 +287,6 @@ class MenuLinksController extends BaseController
 
         if(isset($_POST['data']))
         {
-            
             $nodes = json_decode($_POST['data']);
 
             foreach($nodes as $node)
