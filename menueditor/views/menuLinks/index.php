@@ -90,13 +90,16 @@ $(document).ready(function()
     * Ф-я для генерации последовательности
     *
     */
-    function* generateSequence(start, end) 
+    function generateSequence(start, end)
     {
+        var seq = [];
 
-        for (var i = start; i <= end; i++) 
+        for(var i = start; i <= end; i++)
         {
-            yield i;
+            seq.push(i);
         }
+
+        return seq;
     }
 
 
@@ -115,7 +118,7 @@ $(document).ready(function()
             for (var j = i+1; j < n; j++)
             { 
                 if (array[i] != array[j]) 
-                    return [...generateSequence(1,array.length)];
+                    return generateSequence(1,array.length);
             }
         }
 
