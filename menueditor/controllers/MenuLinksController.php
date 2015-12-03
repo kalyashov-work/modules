@@ -69,7 +69,7 @@ class MenuLinksController extends BaseController
         return Menu::model()->findByAttributes(array('name' => MenuLinks::model()->getMenuName()))->getSections();
     }
 
-    public function getInvisibleSections()
+    public function getHiddenSections()
     {
         return MenuLink::model()->findAll(
             array('conditions'=>
@@ -98,14 +98,13 @@ class MenuLinksController extends BaseController
         $modelAttributes = Menulinks::model()->attributeLabels();
 
         $sections = $this->getMainSections();
-        $invisibleSections = $this->getInvisibleSections();
+        $invisibleSections = $this->getHiddenSections();
         $subsections = $this->getSubSections();
 
         $this->render('index', array(
             'attributes'=>$modelAttributes,
             'sections' => $sections,
             'subsections' => $subsections,
-            'invisibleSections' => $invisibleSections,
         ));
         
 	}

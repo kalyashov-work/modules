@@ -5,6 +5,21 @@
             <div class="portlet-title">
                 <div class="caption"><i class="icon-cogs"></i>SEDMAX | Редактор меню</div>
                 <div class="actions">
+                    <div class="btn-group">
+                        <button class="btn red dropdown-toggle" type="button" data-toggle="dropdown">
+                            Поиск <i class="fa fa-angle-down"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
+                            <form action="#">
+                                <div class="input-group">
+                                    <input type="search" size="20" id="search" class="form-control">  
+                                    <span class="input-group-btn">
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+          
                     <a href="<?php
                         $url_add = Yii::app()->controller->module->id.'/'.Yii::app()->controller->id.'/create';
                         echo Yii::app()->createUrl($url_add); ?>" class="btn red"><i class="fa fa-plus"></i> Добавить пункт</a>
@@ -12,7 +27,9 @@
             </div>
 
             <div class="portlet-body">
-                <input type="search" size="40" id="search" class="form-control" style="margin-bottom:20px;">
+                <div class="row-fluid">
+
+                <!-- Дерево пунктов меню -->
                 <div id="menu_links_tree" class="tree-demo">
                 </div>
                 <div class="alert alert-info no-margin margin-top-10">
@@ -23,16 +40,6 @@
     </div>
 </div>
 
-<div class="span12">
-        <?php 
-        foreach ($invisibleSections as $section) 
-        {   
-            echo CHtml::link($section['title'], array('/menueditor/menulinks/update/id/' . $section['id']), array('class' => '', 'style' => 'color: #2980b9;'));
-            echo "</br>";
-        }
-?>
-
-</div>
 
 <script>
 $(document).ready(function() 
@@ -438,7 +445,8 @@ $(document).ready(function()
                     "max_depth" : 1,
                 },
                 "file" : {
-                    "icon" : "fa fa-file icon-warning icon-lg"
+                    "icon" : "fa fa-folder-o icon-warning icon-lg",
+                    "max_depth" : 1,
                 }
             },
             "state" : { "key" : "main_objects_tree" },
@@ -467,3 +475,11 @@ $(document).ready(function()
     });
    
 </script>
+
+<style>
+    .hidden_menu_link
+    {
+         font-style: italic;
+         opacity: 0.5;
+    }
+</style>

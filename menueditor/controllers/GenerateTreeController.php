@@ -64,22 +64,32 @@ class GenerateTreeController extends BaseController
         return Menu::model()->findByAttributes(array('name' => MenuLinks::model()->getMenuName()))->getSections();
     }
 
+    public function getHiddenSections()
+    {
+        return MenuLink::model()->findAll(
+            array('conditions'=>
+                array('menu_id'=>array('equals'=>7),
+                      'is_visible'=>array('equals'=>false)),
+                'sort'=>array('order' => 1)));
+    }
 
 
     public function actionGenerate()
     {
         $sectionData = array();
         $subsectionData = array();
+        $hiddenSectionsData = array();
 
         $sections = $this->getMainSections();
         $subsections = $this->getSubSections();
+        $hiddenSections = $this->getHiddenSections();
 
         foreach($sections as $section)
         {
             $sectionData[] = array(
                     'id' => $section->id,
                     'text' => $section->title,
-                    'parent' => '#',
+                    'parent' => ($section->parent_id == '#') ? '#' : $section->parent_id,
                     'class' =>'jstree-drop',
                     'data' => array('order' => $section->order),
                 );
@@ -97,10 +107,27 @@ class GenerateTreeController extends BaseController
             }
         }
 
-       
+        foreach($hiddenSections as $section)
+        {
+            $hiddenSectionsData[] = array(
+                    'id' => $section->id,
+                    'text' => '<span class="hidden_menu_link">'.$section->title.'</span>',
+                    'parent' => ($section->parent_id == '#') ? '#' : $section->parent_id,
+                    'class' =>'jstree-drop',
+                    'type' => 'file',
+                    'data' => array('order' => $section->order),
+                );
+        }
+
+        $sectionData = array_merge($sectionData,$hiddenSectionsData,$subsectionData);
+
+        usort($sectionData, function($a, $b){
+            return ($a['data']['order'] - $b['data']['order']);
+        });
+
         header('Content-type: text/json');
         header('Content-type: application/json');
-        echo json_encode(array_merge($sectionData,$subsectionData));
+        echo json_encode(array_merge($sectionData));
     }
    
 
