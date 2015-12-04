@@ -89,7 +89,7 @@ class GenerateTreeController extends BaseController
             $sectionData[] = array(
                     'id' => $section->id,
                     'text' => $section->title,
-                    'parent' => ($section->parent_id == '#') ? '#' : $section->parent_id,
+                    'parent' => (!$section->parent_id) ? '#' : $section->parent_id,,
                     'class' =>'jstree-drop',
                     'data' => array('order' => $section->order),
                 );
@@ -112,7 +112,7 @@ class GenerateTreeController extends BaseController
             $hiddenSectionsData[] = array(
                     'id' => $section->id,
                     'text' => '<span class="hidden_menu_link">'.$section->title.'</span>',
-                    'parent' => ($section->parent_id == '#') ? '#' : $section->parent_id,
+                    'parent' => (!$section->parent_id) ? '#' : $section->parent_id,
                     'class' =>'jstree-drop',
                     'type' => 'file',
                     'data' => array('order' => $section->order),

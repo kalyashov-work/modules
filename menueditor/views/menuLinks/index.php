@@ -135,7 +135,7 @@ $(document).ready(function()
         { 
             for (var j = i+1; j < n; j++)
             { 
-                if (array[i] != array[j]) 
+                if (array[i] == array[j]) 
                     return generateSequence(1,array.length);
             }
         }
@@ -450,11 +450,11 @@ $(document).ready(function()
                 }
             },
             "state" : { "key" : "main_objects_tree" },
-            "plugins" : [ "contextmenu", "dnd", "state", "types", "search","sort"],
-            "sort": function (a, b) 
+            "plugins" : [ "contextmenu", "dnd", "state", "types", "search"],
+            /*"sort": function (a, b) 
             {
                 return a.id > b.id ? 1 : -1;
-            },
+            },*/
         });
 
         // поиск
