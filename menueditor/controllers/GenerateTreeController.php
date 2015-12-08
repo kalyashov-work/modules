@@ -89,7 +89,7 @@ class GenerateTreeController extends BaseController
             $sectionData[] = array(
                     'id' => $section->id,
                     'text' => $section->title,
-                    'parent' => (!$section->parent_id) ? '#' : $section->parent_id,,
+                    'parent' => (!$section->parent_id) ? '#' : $section->parent_id,
                     'class' =>'jstree-drop',
                     'data' => array('order' => $section->order),
                 );

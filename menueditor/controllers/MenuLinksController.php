@@ -14,10 +14,22 @@ class MenuLinksController extends BaseController
             'Delete' => 'Удаление пункта меню',
             'ChangeParent' => 'Изменение родителя (при перетаскивании в дереве)',
             'Rename' => 'Переименование пункта меню',
-            'ChangeOrder' => 'Изменение порядка пункта меню'
+            'ChangeOrder' => 'Изменение порядка пункта меню',
+            'Test' => 'Test'
         );
     }
 
+    public function actionTest()
+    {
+        if("Да" == "Да")
+        {
+            echo 'Да';
+        }
+        else
+        {
+            echo "Ytn";
+        }
+    }
 
     public function getSubSections($id = NULL)
     {
@@ -139,13 +151,59 @@ class MenuLinksController extends BaseController
         
         if(isset($_POST['MenuLinks']))
         {
+
+            // TODO
+            /*if(!Yii::app()->user->checkAccess('Ti_Update')) 
+            {
+                $msg = "Неавторизованная попытка создания пункта меню";
+                $msg .= '; Пользователь: ' . ((Yii::app()->user->isGuest) ? 'Гость' : Yii::app()->user->getName());
+                $msg .= ' (' . Yii::app()->request->userHostAddress . ')';
+                $type = "4";
+                $aMessage = array(
+                    "FullDateTime" => date("Y-m-d H:i:s").'.000',
+                    "txt" => htmlspecialchars (str_replace('\\', '/', $msg)),
+                    "ModuleName" => "SEDWeb",
+                    "type" => $type,
+                    "DeviceID" => "0"
+                );
+                $message = json_encode($aMessage);
+                //$message = '{"FullDateTime":"'.date("Y-m-d H:i:s").'.000","txt":"'. htmlspecialchars ($msg) .'","ModuleName":"SEDWeb","type":"'.$type.'","DeviceID":"0"}';
+                $exName = 'RAS';
+                Yii::app()->amqp->declareExchange($exName, $type = 'fanout', $passive = false, $durable = true, $auto_delete = false);
+                Yii::app()->amqp->publish_message($message, $exName, $routingKey = '', $content_type = 'text/plain', $app_id = yii::app()->name);
+                Yii::app()->amqp->closeConnection();
+
+                //$this->renderPartial('//layouts/error', array('message'=>'Доступ ограничен!'));
+                if(Yii::app()->request->isAjaxRequest)
+                    $this->renderPartial('//layouts/error', array('message'=>'Доступ ограничен!'));
+                else
+                    $this->render('//layouts/error', array('message'=>'Доступ ограничен!'));
+                return;
+            }*/
             
             $model->attributes = $_POST['MenuLinks'];
 
+            
             // TODO поправить баг
             $model->controller = $_POST['MenuLinks']['controller'];
             $model->url = $_POST['MenuLinks']['url'];
             $model->icon = $_POST['MenuLinks']['icon'];
+
+            /*if(is_numeric($_POST['MenuLinks']['is_visible']))
+            {
+                $model->is_visible = (bool) $_POST['MenuLinks']['is_visible'];
+            }
+            else
+            {
+                $model->is_visible = $_POST['MenuLinks']['is_visible'];
+            }*/
+
+            if($_POST['MenuLinks']['is_visible'] == "Да")
+                $model->is_visible = true;
+            else if($_POST['MenuLinks']['is_visible'] == "Нет")
+                $model->is_visible = false;
+            else
+                $model->is_visible = $_POST['MenuLinks']['is_visible'];
             
             if($model->save())
             {  
@@ -228,6 +286,14 @@ class MenuLinksController extends BaseController
             $model->controller = $_POST['MenuLinks']['controller'];
             $model->url = $_POST['MenuLinks']['url'];
             $model->icon = $_POST['MenuLinks']['icon'];
+
+
+            if($_POST['MenuLinks']['is_visible'] == "Да")
+                $model->is_visible = true;
+            else if($_POST['MenuLinks']['is_visible'] == "Нет")
+                $model->is_visible = false;
+            else
+                $model->is_visible = $_POST['MenuLinks']['is_visible'];
             
             if($model->save())
             {   

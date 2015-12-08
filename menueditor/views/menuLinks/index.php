@@ -11,10 +11,9 @@
                         </button>
                         <div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
                             <form action="#">
-                                <div class="input-group">
-                                    <input type="search" size="20" id="search" class="form-control">  
-                                    <span class="input-group-btn">
-                                    </span>
+                                <div class="input-group" >
+                                    <input type="search" size="22" id="search" class="form-control">  
+                                    
                                 </div>
                             </form>
                         </div>
@@ -451,10 +450,7 @@ $(document).ready(function()
             },
             "state" : { "key" : "main_objects_tree" },
             "plugins" : [ "contextmenu", "dnd", "state", "types", "search"],
-            /*"sort": function (a, b) 
-            {
-                return a.id > b.id ? 1 : -1;
-            },*/
+            
         });
 
         // поиск

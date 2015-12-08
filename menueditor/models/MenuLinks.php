@@ -5,7 +5,7 @@ class MenuLinks extends EMongoDocument
     public $id;
     public $title;
     public $controller;
-    public $is_visible = 1;
+    public $is_visible = "Да";
     public $url;
     public $icon;
     public $parent_id;
@@ -50,10 +50,10 @@ class MenuLinks extends EMongoDocument
                 'numerical',
                 'integerOnly' => true
             ),
-            array(
+           /* array(
                 'is_visible',
                 'boolean'
-            ),
+            ),*/
             array(
                 'id',
                 'length',

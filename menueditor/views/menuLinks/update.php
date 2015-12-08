@@ -72,10 +72,13 @@
                             </div>
                         </div>
 
-                        <label class="control-label col-md-3" style="padding-top:15px"> <?php echo CHtml::activeLabel($model, 'is_visible'); ?> </label>
-                        <div class="col-md-9" style="padding-top:15px;">
-                            <div class="make-switch" data-on="success" data-off="danger">
-                                <?php  echo CHtml::activeCheckBox($model, 'is_visible', array('type' => 'checkbox', 'class'=>'toggle')); ?>
+                        <label class="control-label col-md-3" style="padding-top:20px;"> <?php echo CHtml::activeLabel($model, 'is_visible'); ?> </label>
+                        <div class="col-md-9" style="padding-top:20px;">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="padding:0px; margin:0px;">
+                                    <a id="toggleVisible" class="btn btn-default btn-sm">Да/Нет</a>
+                                </span>
+                                <?php  echo CHtml::activeTextField($model,'is_visible', array('class' => 'form-control','id' => 'visibleInput')) . '<br>'; ?>
                             </div>
                         </div>
                                
@@ -118,3 +121,41 @@
             <?php echo CHtml::endForm();?>
     </div>
 </div>
+
+    <script>
+
+        $( document ).ready(function() {
+    var visibleInput = document.getElementById('visibleInput');
+            if(visibleInput.value == 1)
+            {
+                visibleInput.value = "Да";
+            }
+            else if(!visibleInput.value)
+            {
+               visibleInput.value = "Нет";
+            }
+            
+    });
+    </script>
+
+
+
+    <script>
+
+        var toggleVisible = document.getElementById('toggleVisible');
+        var visibleInput = document.getElementById('visibleInput');
+        toggleVisible.onclick = function()
+        {
+            if(visibleInput.value == "Да")
+            {
+                visibleInput.value = "Нет";
+            }
+            else 
+            {
+                visibleInput.value = "Да";
+            }
+            
+            return false;
+        }
+
+    </script>

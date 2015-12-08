@@ -71,14 +71,30 @@
                                 <?php #   echo CHtml::activeTextField($model,'order', array('class'=>'form-control touchspin_retries')) . '<br>'; ?>
                             </div>-->
 
+                            <!--<label class="control-label col-md-3"> <?php# echo CHtml::activeLabel($model, 'is_visible'); ?> </label>
+                            
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <div class="make-switch" data-on="success" data-off="danger">
+                                    <?php  #echo CHtml::activeCheckBox($model, 'is_visible', array('type' => 'checkbox', 'class'=>'toggle')); ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-8 col-md-9 col-sm-6">
+                                    <?php #  echo CHtml::activeTextField($model,'is_visible', array('class' => 'form-control')) . '<br>'; ?>
+                                </div> 
+                            </div>-->
+
                             <label class="control-label col-md-3"> <?php echo CHtml::activeLabel($model, 'is_visible'); ?> </label>
                             <div class="col-md-9">
-                                <div class="make-switch" data-on="success" data-off="danger">
-                                    <?php  echo CHtml::activeCheckBox($model, 'is_visible', array('type' => 'checkbox', 'class'=>'toggle')); ?>
+                                <div class="input-group">
+                                    <span class="input-group-addon" style="padding:0px; margin:0px;">
+                                        <a id="toggleVisible" class="btn btn-default btn-sm">Да/Нет</a>
+                                    </span>
+                                     <?php  echo CHtml::activeTextField($model,'is_visible', array('class' => 'form-control','id' => 'visibleInput')) . '<br>'; ?>
                                 </div>
                             </div>
-                            
-
+                                   
                         </div>
                     </div>
                 </div>
@@ -123,3 +139,23 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+        var toggleVisible = document.getElementById('toggleVisible');
+        var visibleInput = document.getElementById('visibleInput');
+        toggleVisible.onclick = function()
+        {
+            if(visibleInput.value == "Да")
+            {
+                visibleInput.value = "Нет";
+            }
+            else 
+            {
+                visibleInput.value = "Да";
+            }
+            
+            return false;
+        }
+
+    </script>
